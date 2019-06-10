@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <script src="../../dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      let comp2 = {
+        template: `<h3 class="b">
+                      <p>comp2 Comp</p>
+                  </h3>`,
+        name: "comp2",
+        mounted() {
+          console.log("comp2 mounted");
+        }
+      };
+
+      let comp1 = {
+        template: `<h2>a
+                      <comp2></comp2>
+                   </h2>`,
+        name: "comp1",
+        components: {
+          comp2
+        },
+        mounted() {
+          console.log("comp1 mounted");
+        }
+      };
+
+      let vm = new Vue({
+        el: "#app",
+        template: `
+          <h1>
+            <comp1></comp1>
+          </h1>`,
+        components: {
+          comp1
+        },
+        mounted() {
+          console.log("vue mounted");
+        }
+      });
+    </script>
+  </body>
+</html>

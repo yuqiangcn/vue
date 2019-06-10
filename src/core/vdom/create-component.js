@@ -36,9 +36,14 @@ const componentVNodeHooks = {
     refElm: ?Node
   ): ?boolean {
     if (!vnode.componentInstance || vnode.componentInstance._isDestroyed) {
+      //  vm._update 的过程中，把当前的 vm 赋值给 activeInstance，同时通过 const prevActiveInstance = activeInstance
+      // 用 prevActiveInstance 保留上一次的 activeInstance。实际上，prevActiveInstance 和当前的 vm 是一个父子关系，
+      // 当一个 vm 实例完成它的所有子树的 patch 或者 update 过程后，activeInstance 会回到它的父实例，
+      // 这样就完美地保证了 createComponentInstanceForVnode 整个深度遍历过程中，
+      // 我们在实例化子组件的时候能传入当前子组件的父 Vue 实例，并在 _init 的过程中，通过 vm.$parent 把这个父子关系保留
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
-        activeInstance,
+        activeInstance, // 全局的Vue实例，在lifecycleMixin实现
         parentElm,
         refElm
       )
@@ -160,7 +165,6 @@ export function createComponent (
   if (isTrue(Ctor.options.functional)) {
     return createFunctionalComponent(Ctor, propsData, data, context, children)
   }
-
   // extract listeners, since these needs to be treated as
   // child component listeners instead of DOM listeners
   const listeners = data.on
@@ -185,6 +189,7 @@ export function createComponent (
 
   // return a placeholder vnode
   const name = Ctor.options.name || tag
+  // 组件的 vnode 是没有 children 的
   const vnode = new VNode(
     `vue-component-${Ctor.cid}${name ? `-${name}` : ''}`,
     data, undefined, undefined, undefined, context,
@@ -221,6 +226,8 @@ export function createComponentInstanceForVnode (
   return new vnodeComponentOptions.Ctor(options)
 }
 
+// ? 在合并过程中，如果某个时机的钩子已经存在 data.hook 中，那么通过执行 mergeHook 函数做合并，
+// 这个逻辑很简单，就是在最终执行的时候，依次执行这两个钩子函数即可。
 function mergeHooks (data: VNodeData) {
   if (!data.hook) {
     data.hook = {}

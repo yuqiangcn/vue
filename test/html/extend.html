@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <script src="../../dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="mount-point"></div>
+    <script>
+      var Profile = Vue.extend({
+        template: "<p>{{firstName}} {{lastName}} aka {{alias}}</p>",
+        data: function() {
+          return {
+            firstName: "Walter",
+            lastName: "White",
+            alias: "Heisenberg"
+          };
+        }
+      });
+      var instance = new Profile();
+      var vm = instance.$mount("#mount-point");
+    </script>
+  </body>
+</html>

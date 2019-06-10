@@ -185,9 +185,12 @@ export function createPatchFunction (backend) {
 
   function createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
     let i = vnode.data
+    // 如果 vnode 是一个组件，那么就会有hook这些钩子函数
     if (isDef(i)) {
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
+      // 得到 i 就是 init 钩子函数
       if (isDef(i = i.hook) && isDef(i = i.init)) {
+        // 通过 createComponentInstanceForVnode 创建一个 Sub 的实例
         i(vnode, false /* hydrating */, parentElm, refElm)
       }
       // after calling the init hook, if the vnode is a child component
@@ -203,7 +206,6 @@ export function createPatchFunction (backend) {
       }
     }
   }
-
   function initComponent (vnode, insertedVnodeQueue) {
     if (isDef(vnode.data.pendingInsert)) {
       insertedVnodeQueue.push.apply(insertedVnodeQueue, vnode.data.pendingInsert)
@@ -273,6 +275,8 @@ export function createPatchFunction (backend) {
     return isDef(vnode.tag)
   }
 
+  // invokeCreateHooks 方法执行所有的 create 的钩子
+  // 比如说 updateAttrs
   function invokeCreateHooks (vnode, insertedVnodeQueue) {
     for (let i = 0; i < cbs.create.length; ++i) {
       cbs.create[i](emptyNode, vnode)
@@ -628,6 +632,10 @@ export function createPatchFunction (backend) {
     }
   }
 
+  // oldVnode 表示旧的 VNode 节点，它也可以不存在或者是一个 DOM 对象；
+  // vnode 表示执行 _render 后返回的 VNode 的节点；
+  // hydrating 表示是否是服务端渲染；
+  // removeOnly 是给 transition-group 用的
   return function patch (oldVnode, vnode, hydrating, removeOnly, parentElm, refElm) {
     if (isUndef(vnode)) {
       if (isDef(oldVnode)) invokeDestroyHook(oldVnode)
