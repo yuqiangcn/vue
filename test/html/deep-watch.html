@@ -11,15 +11,17 @@
         el: "#app",
         template: `
             <h1>
-              {{this.fullName}}
+              {{this.a.b}}
             </h1>
             `,
         data: {
-          firstName: "Foo"
+          a: {
+            b: "Foo"
+          }
         },
-        computed: {
-          fullName: function() {
-            return this.firstName + " Bar";
+        watch: {
+          "a.b": newVal => {
+            console.log(newVal);
           }
         }
       });

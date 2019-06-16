@@ -10,17 +10,13 @@
       var vm = new Vue({
         el: "#app",
         template: `
-            <h1>
-              {{this.fullName}}
-            </h1>
+            <div>
+              <input type="text" name="" id="" v-model="msg">
+              <p>{{msg}}</p>
+            </div>
             `,
         data: {
-          firstName: "Foo"
-        },
-        computed: {
-          fullName: function() {
-            return this.firstName + " Bar";
-          }
+          msg: "Foo"
         }
       });
     </script>

@@ -10,16 +10,18 @@
       var vm = new Vue({
         el: "#app",
         template: `
-            <h1>
-              {{this.fullName}}
-            </h1>
+        <ul :class="bindCls" class="list" v-if="isShow">
+            <li v-for="(item,index) in data" @click="clickItem(index)">{{item}}:{{index}}</li>
+        </ul>
             `,
         data: {
-          firstName: "Foo"
+          data: [1, 2, 3],
+          bindCls: "ddd",
+          isShow: true
         },
-        computed: {
-          fullName: function() {
-            return this.firstName + " Bar";
+        methods: {
+          clickItem(idx) {
+            console.log(idx);
           }
         }
       });

@@ -10,16 +10,17 @@
       var vm = new Vue({
         el: "#app",
         template: `
-            <h1>
-              {{this.fullName}}
-            </h1>
+            <div>
+              <p v-if="isShow">{{this.msg}}</p>
+            </div>
             `,
         data: {
-          firstName: "Foo"
+          msg: "Hello",
+          isShow: true
         },
-        computed: {
-          fullName: function() {
-            return this.firstName + " Bar";
+        methods:{
+          change(){
+            this.isShow = !this.isShow
           }
         }
       });
